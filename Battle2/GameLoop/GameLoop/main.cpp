@@ -70,9 +70,6 @@ public:
         if(scene[data[0]][data[1]] == 'G'){
             state = 0;
         }else{
-            for(int i = 0; i < 5; i++)
-                cout << data[i];
-            cout << endl;
             scene[data[0]][data[1]] = 'P';
             scene[data[2]][data[3]] = '-';
         }
@@ -105,9 +102,12 @@ public:
     }
     void notifyViews(){
         for(list<View*>::iterator it = scenes.begin(); it != scenes.end(); it++){
+            //send data to views to update board
             (*it)->Update(data);
         }
     }
+    
+    //adjust data containing coordinates
     void setState(char action){
         switch(action){
             case 'u':
@@ -158,15 +158,20 @@ public:
     void processInput(char input);
 };
 
+//set input to player to be interpreted
 void GetInput::processInput(char input){
     player->setState(input);
 }
+
+//retrieve initiate input and send to controller
 void View::acceptInput(){
     char input;
     cin >> input;
     controller->processInput(input);
 }
 
+//contains gameLoop in its entirety
+//will use for testing
 class GameLoop{
 private:
     bool running;
@@ -190,6 +195,7 @@ public:
         g->getGUI();
         s->getBoard();
         
+        //gameLoop
         while(true){
             cout << "Action? \nu=up\nd=down\nl=left\nr=right\n";
             g->acceptInput();
@@ -207,7 +213,7 @@ public:
 };
 
 //test will figure out if gameLoop is still running
-//when game loop should not be running	
+//when game loop should not be running
 class Test{
 public:
     void startTest(){
